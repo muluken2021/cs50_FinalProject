@@ -1,54 +1,20 @@
-from flask import Flask, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask
 from flask_cors import CORS
-import os
+from config import Config
+from database.db import db
+from routes.transaction_routes import transaction_bp
 
 app = Flask(__name__)
-CORS(app)  # Allow requests from React frontend
+app.config.from_object(Config)
 
-# PostgreSQL configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://username:password@localhost:5432/finance_db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+CORS(app)
 
-db = SQLAlchemy(app)
+db.init_app(app)
 
-# Models
-class Transaction(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.String(10))  # 'income' or 'expense'
-    category = db.Column(db.String(50))
-    amount = db.Column(db.Float)
-    description = db.Column(db.String(200))
+app.register_blueprint(transaction_bp)
 
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'type': self.type,
-            'category': self.category,
-            'amount': self.amount,
-            'description': self.description
-        }
+if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
 
-# Routes
-@app.route('/transactions', methods=['GET'])
-def get_transactions():
-    transactions = Transaction.query.all()
-    return jsonify([t.to_dict() for t in transactions])
-
-@app.route('/transaction/add', methods=['POST'])
-def add_transaction():
-    data = request.json
-    new_txn = Transaction(
-        type=data['type'],
-        category=data['category'],
-        amount=data['amount'],
-        description=data.get('description', '')
-    )
-    db.session.add(new_txn)
-    db.session.commit()
-    return jsonify({'message': 'Transaction added successfully'}), 201
-
-# Run the server
-if __name__ == '__main__':
-    db.create_all()
     app.run(debug=True)
