@@ -3,6 +3,7 @@ import { getTransactions, getSummary } from "./services/api";
 import AddTransaction from "./components/AddTransaction";
 import TransactionList from "./components/TransactionList";
 import { Wallet, TrendingUp, TrendingDown } from "lucide-react";
+import FinanceChart from "./components/FinanceChart";
 
 function App() {
 
@@ -76,6 +77,15 @@ function App() {
           refresh={loadData}
         />
       </div>
+
+      {/* Chart */}
+        <div className="bg-white p-6 rounded-xl shadow mb-8">
+          <h2 className="text-xl font-semibold mb-4">
+            Income vs Expense
+          </h2>
+
+          <FinanceChart summary={summary}/>
+        </div>
 
     </div>
   );
