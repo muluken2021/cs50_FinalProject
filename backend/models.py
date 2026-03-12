@@ -4,7 +4,8 @@ class Transaction(db.Model):
     __tablename__ = "transactions"
 
     id = db.Column(db.Integer, primary_key=True)
-    type = db.Column(db.String(10))
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    type = db.Column(db.String(10))  
     category = db.Column(db.String(50))
     amount = db.Column(db.Float)
     description = db.Column(db.String(200))
