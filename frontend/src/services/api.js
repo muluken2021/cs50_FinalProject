@@ -9,6 +9,9 @@ export const getTransactions = () => API.get("/transactions");
 export const addTransaction = (data) =>
   API.post("/transaction/add", data);
 
+export const updateTransaction = (id, data) =>
+  API.put(`/transaction/${id}`, data);
+
 export const deleteTransaction = (id) =>
   API.delete(`/transaction/${id}`);
 

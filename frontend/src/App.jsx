@@ -78,6 +78,10 @@ function App() {
         />
       </div>
 
+      <div>
+        biographical simulation over the comming things over the game to be the comming theathed
+      </div>
+
       {/* Chart */}
         <div className="bg-white p-6 rounded-xl shadow mb-8">
           <h2 className="text-xl font-semibold mb-4">
