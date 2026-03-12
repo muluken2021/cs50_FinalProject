@@ -1,96 +1,45 @@
-import { useEffect, useState } from "react";
-import { getTransactions, getSummary } from "./services/api";
+import { useState, useEffect } from "react";
+import Login from "./components/Login";
+import Register from "./components/Register";
 import AddTransaction from "./components/AddTransaction";
 import TransactionList from "./components/TransactionList";
-import { Wallet, TrendingUp, TrendingDown } from "lucide-react";
-import FinanceChart from "./components/FinanceChart";
+import { getTransactions } from "./services/api";
 
 function App() {
-
+  const [userId, setUserId] = useState(localStorage.getItem("userId") || null);
   const [transactions, setTransactions] = useState([]);
-  const [summary, setSummary] = useState({});
+  const [showRegister, setShowRegister] = useState(false);
 
-  const loadData = async () => {
-
-    const res = await getTransactions();
+  const fetchTransactions = async () => {
+    if (!userId) return;
+    const res = await getTransactions(userId);
     setTransactions(res.data);
-
-    const sum = await getSummary();
-    setSummary(sum.data);
   };
 
   useEffect(() => {
-    loadData();
-  }, []);
+    fetchTransactions();
+  }, [userId]);
+
+  if (!userId) {
+    return showRegister ? (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <Register onRegisterSuccess={() => setShowRegister(false)} />
+        <button onClick={() => setShowRegister(false)} className="mt-2 text-blue-500">Go to Login</button>
+      </div>
+    ) : (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <Login onLogin={setUserId} />
+        <button onClick={() => setShowRegister(true)} className="mt-2 text-blue-500">Create Account</button>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-8">
+    <div className="p-8">
+      <button onClick={() => { localStorage.removeItem("userId"); setUserId(null); }} className="mb-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Logout</button>
 
-      <h1 className="text-3xl font-bold mb-6">
-        Finance Tracker
-      </h1>
-
-      {/* Summary Cards */}
-      <div className="grid md:grid-cols-3 gap-6 mb-8">
-
-        <div className="bg-white p-6 rounded-xl shadow flex items-center gap-4">
-          <Wallet className="text-blue-500"/>
-          <div>
-            <p className="text-gray-500">Balance</p>
-            <h2 className="text-xl font-bold">
-              ${summary.balance || 0}
-            </h2>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-xl shadow flex items-center gap-4">
-          <TrendingUp className="text-green-500"/>
-          <div>
-            <p className="text-gray-500">Income</p>
-            <h2 className="text-xl font-bold">
-              ${summary.total_income || 0}
-            </h2>
-          </div>
-        </div>
-
-        <div className="bg-white p-6 rounded-xl shadow flex items-center gap-4">
-          <TrendingDown className="text-red-500"/>
-          <div>
-            <p className="text-gray-500">Expense</p>
-            <h2 className="text-xl font-bold">
-              ${summary.total_expense || 0}
-            </h2>
-          </div>
-        </div>
-
-      </div>
-
-      {/* Form */}
-      <div className="bg-white p-6 rounded-xl shadow mb-8">
-        <AddTransaction refresh={loadData}/>
-      </div>
-
-      {/* Transactions */}
-      <div className="bg-white p-6 rounded-xl shadow">
-        <TransactionList
-          transactions={transactions}
-          refresh={loadData}
-        />
-      </div>
-
-      <div>
-        biographical simulation over the comming things over the game to be the comming theathed
-      </div>
-
-      {/* Chart */}
-        <div className="bg-white p-6 rounded-xl shadow mb-8">
-          <h2 className="text-xl font-semibold mb-4">
-            Income vs Expense
-          </h2>
-
-          <FinanceChart summary={summary}/>
-        </div>
-
+      <AddTransaction userId={userId} refresh={fetchTransactions} />
+      <TransactionList transactions={transactions} refresh={fetchTransactions} />
     </div>
   );
 }
