@@ -4,6 +4,7 @@ import Register from "./components/Register";
 import AddTransaction from "./components/AddTransaction";
 import TransactionList from "./components/TransactionList";
 import { getTransactions } from "./services/api";
+import AffinityCarousel from "./components/AffinityCarousel";
 
 function App() {
   const [userId, setUserId] = useState(localStorage.getItem("userId") || null);
@@ -22,10 +23,14 @@ function App() {
 
   if (!userId) {
     return showRegister ? (
-      <div className="flex flex-col items-center justify-center h-screen">
-        <Register onRegisterSuccess={() => setShowRegister(false)} />
-        <button onClick={() => setShowRegister(false)} className="mt-2 text-blue-500">Go to Login</button>
-      </div>
+      // <div className="flex flex-col items-center justify-center h-screen">
+      //   <Register onRegisterSuccess={() => setShowRegister(false)} />
+      //   <button onClick={() => setShowRegister(false)} className="mt-2 text-blue-500">Go to Login</button>
+        
+      // </div>
+   <AffinityCarousel />
+      
+
     ) : (
       <div className="flex flex-col items-center justify-center h-screen">
         <Login onLogin={setUserId} />
