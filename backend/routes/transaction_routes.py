@@ -69,3 +69,6 @@ def get_summary():
         "total_expense": expense,
         "balance": balance
     })
+    
+    
+    
