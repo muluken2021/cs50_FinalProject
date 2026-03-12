@@ -30,13 +30,12 @@ def register():
 @auth_bp.route("/login", methods=["POST"])
 def login():
     data = request.json
+    email = data.get("email")
+    password = data.get("password")
 
-    user = User.query.filter_by(email=data["email"]).first()
-
-    if not user or not check_password_hash(user.password, data["password"]):
+    user = User.query.filter_by(email=email).first()
+    if not user or not check_password_hash(user.password, password):
         return jsonify({"error": "Invalid credentials"}), 401
 
-    return jsonify({
-        "message": "Login successful",
-        "user_id": user.id
-    })
+    # success
+    return jsonify({"message": "Logged in successfully"})
