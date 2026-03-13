@@ -32,6 +32,11 @@ import ForgotPassword from "./components/ForgotPassword";
 import SignIn from "./components/SignIn";
 import SignUp from "./components/SignUp";
 import CheckoutPage from "./components/CheckoutPage";
+import { NotFoundPage } from "./components/NotFoundPage";
+import BlogSection from "./components/BlogSection";
+import BlogPostDetail from "./components/BlogPostDetail";
+import ProductDetail from "./components/ProductDetail";
+import Product from "./components/Product";
 
 function App() {
   const [userId, setUserId] = useState(localStorage.getItem("userId") || null);
@@ -81,7 +86,12 @@ function App() {
         <SignIn />
         <SignUp />
         <CheckoutPage />
+        <BlogSection />
+        <BlogPostDetail />
+        <ProductDetail />
+        <Product />
 
+        <NotFoundPage />
         <HighEndPortfolio/>
          <OverlapScroll />
         <CinematicProductScroll />
