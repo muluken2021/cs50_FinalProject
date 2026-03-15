@@ -1,14 +1,15 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-
+import { Routes, Route } from "react-router-dom";
+import Dashboard from "./components/Dashboard";
+import Transactions from "./components/Transactions";
 import Navbar from "./components/Navbar";
-import Dashboard from "./pages/Dashboard";
-import Transactions from "./pages/Transactions";
+
+
 
 function App() {
   return (
-    <Router>
-      <div className="flex w-full bg-[#f0f4f9] min-h-screen">
+  
+      <div className=" w-full bg-[#f0f4f9] min-h-screen">
 
         {/* Navbar */}
         <Navbar />
@@ -22,7 +23,7 @@ function App() {
         </main>
 
       </div>
-    </Router>
+
   );
 }
 
