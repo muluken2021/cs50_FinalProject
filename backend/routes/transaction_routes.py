@@ -13,17 +13,18 @@ def get_transactions():
 def add_transaction():
     data = request.json
 
-    new_txn = Transaction(
+    transaction = Transaction(
+        user_id=data["user_id"],
         type=data["type"],
         category=data["category"],
         amount=data["amount"],
         description=data.get("description", "")
     )
 
-    db.session.add(new_txn)
+    db.session.add(transaction)
     db.session.commit()
 
-    return jsonify({"message": "Transaction added"}), 201
+    return jsonify({"message": "Transaction added successfully"})
 
 @transaction_bp.route("/transaction/<int:id>", methods=["DELETE"])
 def delete_transaction(id):

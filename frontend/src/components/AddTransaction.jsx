@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { addTransaction } from "../services/api";
 
-function AddTransaction({ refresh }) {
-
+function AddTransaction({ userId, refresh }) {
   const [type, setType] = useState("income");
   const [category, setCategory] = useState("");
   const [amount, setAmount] = useState("");
@@ -10,74 +9,47 @@ function AddTransaction({ refresh }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!category || !amount) return; // basic validation
-
     await addTransaction({
+      user_id: userId,
       type,
       category,
       amount: parseFloat(amount)
     });
 
-    // reset form
     setCategory("");
     setAmount("");
-
     refresh();
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="grid md:grid-cols-4 gap-4 items-end"
-    >
+    <form onSubmit={handleSubmit} className="flex gap-2 mb-4">
+      <select
+        value={type}
+        onChange={(e) => setType(e.target.value)}
+        className="border p-2 rounded"
+      >
+        <option value="income">Income</option>
+        <option value="expense">Expense</option>
+      </select>
 
-      {/* Transaction Type */}
-      <div className="flex flex-col">
-        <label className="text-gray-600 mb-1">Type</label>
-        <select
-          className="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-blue-400"
-          value={type}
-          onChange={(e)=>setType(e.target.value)}
-        >
-          <option value="income">Income</option>
-          <option value="expense">Expense</option>
-        </select>
-      </div>
+      <input
+        placeholder="Category"
+        value={category}
+        onChange={(e) => setCategory(e.target.value)}
+        className="border p-2 rounded"
+      />
 
-      {/* Category */}
-      <div className="flex flex-col">
-        <label className="text-gray-600 mb-1">Category</label>
-        <input
-          type="text"
-          className="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-blue-400"
-          placeholder="Category"
-          value={category}
-          onChange={(e)=>setCategory(e.target.value)}
-        />
-      </div>
+      <input
+        type="number"
+        placeholder="Amount"
+        value={amount}
+        onChange={(e) => setAmount(e.target.value)}
+        className="border p-2 rounded"
+      />
 
-      {/* Amount */}
-      <div className="flex flex-col">
-        <label className="text-gray-600 mb-1">Amount</label>
-        <input
-          type="number"
-          className="border border-gray-300 p-2 rounded focus:ring-2 focus:ring-blue-400"
-          placeholder="Amount"
-          value={amount}
-          onChange={(e)=>setAmount(e.target.value)}
-        />
-      </div>
-
-      {/* Submit Button */}
-      <div>
-        <button
-          type="submit"
-          className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded w-full"
-        >
-          Add Transaction
-        </button>
-      </div>
-
+      <button className="bg-blue-500 text-white px-4 rounded">
+        Add
+      </button>
     </form>
   );
 }
