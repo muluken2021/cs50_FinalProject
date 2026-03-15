@@ -19,8 +19,14 @@ const Transactions = ({ userId }) => {
   // Fetch transactions
   const fetchTransactions = async () => {
     setLoading(true);
-    const data = await getTransactions(userId);
-    setTransactions(data);
+    try {
+      const res = await getTransactions(userId);
+      // Ensure it's an array
+      setTransactions(Array.isArray(res.data) ? res.data : res || []);
+    } catch (error) {
+      console.error("Error fetching transactions:", error);
+      setTransactions([]);
+    }
     setLoading(false);
   };
 
@@ -29,9 +35,7 @@ const Transactions = ({ userId }) => {
   }, []);
 
   // Handle modal form change
-  const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  };
+  const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
   // Add new transaction
   const handleAdd = async (e) => {
@@ -74,7 +78,7 @@ const Transactions = ({ userId }) => {
   return (
     <div>
       {/* Header */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
         <h1 className="text-2xl md:text-3xl font-bold">Transactions</h1>
         <button
           onClick={() => setOpen(true)}
@@ -88,7 +92,7 @@ const Transactions = ({ userId }) => {
       <div className="overflow-x-auto bg-white rounded-[32px] p-4 md:p-6 shadow-sm">
         {loading ? (
           <p className="text-center text-gray-500">Loading...</p>
-        ) : transactions.length === 0 ? (
+        ) : (transactions || []).length === 0 ? (
           <p className="text-center text-gray-500">No transactions yet.</p>
         ) : (
           <table className="w-full text-left border border-gray-200 rounded-lg shadow-sm">
@@ -101,7 +105,7 @@ const Transactions = ({ userId }) => {
               </tr>
             </thead>
             <tbody>
-             {(transactions || []).map((t) => (
+              {(transactions || []).map((t) => (
                 <tr key={t.id} className="border-b hover:bg-gray-50">
                   <td className="p-3">
                     {editId === t.id ? (
@@ -167,7 +171,6 @@ const Transactions = ({ userId }) => {
                         <Edit2 size={20} />
                       </button>
                     )}
-
                     <button
                       onClick={() => handleDelete(t.id)}
                       className="text-red-500 hover:text-red-700"
@@ -185,7 +188,7 @@ const Transactions = ({ userId }) => {
 
       {/* Add Transaction Modal */}
       {open && (
-        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4">
+        <div className="fixed inset-0 bg-black/40 flex items-center justify-center p-4 z-50">
           <div className="bg-white w-full max-w-md rounded-2xl p-6 relative">
             <button
               onClick={() => setOpen(false)}
@@ -228,7 +231,6 @@ const Transactions = ({ userId }) => {
                 value={form.date}
                 onChange={handleChange}
                 className="w-full border p-3 rounded-lg"
-                required
               />
               <button
                 type="submit"
