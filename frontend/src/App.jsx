@@ -15,7 +15,7 @@ function App() {
         <Navbar />
 
         {/* Page Content */}
-        <main className="flex-1 p-10 overflow-y-auto">
+        <main className="flex-1 p-4 sm:p-10 overflow-y-auto">
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/transactions" element={<Transactions />} />
