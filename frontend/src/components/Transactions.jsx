@@ -101,7 +101,7 @@ const Transactions = ({ userId }) => {
               </tr>
             </thead>
             <tbody>
-              {transactions.map((t) => (
+             {(transactions || []).map((t) => (
                 <tr key={t.id} className="border-b hover:bg-gray-50">
                   <td className="p-3">
                     {editId === t.id ? (
