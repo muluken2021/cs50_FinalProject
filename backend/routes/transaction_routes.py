@@ -12,19 +12,21 @@ def get_transactions():
 @transaction_bp.route("/transaction/add", methods=["POST"])
 def add_transaction():
     data = request.json
-
-    transaction = Transaction(
-        user_id=data["user_id"],
-        type=data["type"],
-        category=data["category"],
-        amount=data["amount"],
-        description=data.get("description", "")
-    )
-
-    db.session.add(transaction)
-    db.session.commit()
-
-    return jsonify({"message": "Transaction added successfully"})
+    try:
+        transaction = Transaction(
+            user_id=data["user_id"],
+            type=data["type"],
+            category=data["category"],
+            amount=float(data["amount"]),  # <- convert to float
+            description=data.get("description", "")
+        )
+        db.session.add(transaction)
+        db.session.commit()
+        return jsonify({"message": "Transaction added successfully"})
+    except KeyError as e:
+        return jsonify({"error": f"Missing field {e}"}), 400
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 @transaction_bp.route("/transaction/<int:id>", methods=["DELETE"])
 def delete_transaction(id):
