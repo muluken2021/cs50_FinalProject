@@ -16,7 +16,7 @@ const Transactions = () => {
       <div className="bg-white rounded-[32px] p-8 shadow-sm">
 
         {transactions.map((tx) => (
-          <div key={tx.id} className="flex justify-between py-4 border-b">
+          <div key={tx.id} className="flex justify-between py-4 ">
 
             <div className="flex items-center gap-3">
               {tx.icon}
