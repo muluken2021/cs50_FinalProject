@@ -17,7 +17,7 @@ def add_transaction():
             user_id=data["user_id"],
             type=data["type"],
             category=data["category"],
-            amount=float(data["amount"]),  # <- convert to float
+            amount=float(data["amount"]),  
             description=data.get("description", "")
         )
         db.session.add(transaction)
