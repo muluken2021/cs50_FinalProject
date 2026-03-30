@@ -1,17 +1,42 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+  <meta charset="UTF-8">
   <title>Quick Notes</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
+<body class="dark-mode"> <div class="container">
+    
+    <div class="header">
+      <h2>Quick Notes</h2>
+      <div class="header-icons">
+        <span id="themeToggle"><i class="fa-regular fa-moon"></i></span>
+        <span id="closeApp"><i class="fa-regular fa-circle-xmark"></i></span>
+      </div>
+    </div>
+    
+    <textarea id="noteInput" placeholder="What’s in your mind ?"></textarea>
+    <button id="addBtn">Add Note</button>
 
-  <h2>Quick Notes</h2>
-
-  <textarea id="noteInput" placeholder="Write a note..."></textarea>
-  <button id="addBtn">Add Note</button>
-
-  <ul id="notesList"></ul>
+    <div class="notes-header">
+      <h3>Your Notes</h3>
+      <button id="clearAllBtn" class="clear-btn">Clear All</button>
+    </div>
+    <ul id="notesList">
+      <li>
+        <span class="note-text">Hi there</span>
+        <button class="delete-note"><i class="fa-solid fa-trash-can"></i></button>
+      </li>
+      <li>
+        <span class="note-text">Example note with a long text showing the box and wrap behavior.</span>
+        <button class="delete-note"><i class="fa-solid fa-trash-can"></i></button>
+      </li>
+    </ul>
+  </div>
 
   <script src="popup.js"></script>
 </body>

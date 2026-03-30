@@ -1,63 +1,80 @@
-const noteInput = document.getElementById("noteInput");
-const addBtn = document.getElementById("addBtn");
-const notesList = document.getElementById("notesList");
+const noteInput = document.getElementById('noteInput');
+const addBtn = document.getElementById('addBtn');
+const notesList = document.getElementById('notesList');
+const clearAllBtn = document.getElementById('clearAllBtn');
+const themeToggle = document.getElementById('themeToggle');
+const body = document.body;
 
-// Load notes when popup opens
-document.addEventListener("DOMContentLoaded", loadNotes);
-
-// Add note
-addBtn.addEventListener("click", () => {
-  const text = noteInput.value.trim();
-  if (text === "") return;
-
-  chrome.storage.local.get(["notes"], (result) => {
-    const notes = result.notes || [];
-    notes.push(text);
-
-    chrome.storage.local.set({ notes }, () => {
-      noteInput.value = "";
-      displayNotes(notes);
-    });
-  });
+// --- INITIALIZE ---
+document.addEventListener('DOMContentLoaded', () => {
+  // Load Theme
+  const savedTheme = localStorage.getItem('notesTheme') || 'dark-mode';
+  setTheme(savedTheme);
+  
+  // Check if list is empty to show "No notes"
+  updateEmptyState();
 });
 
-// Display notes
-function displayNotes(notes) {
-  notesList.innerHTML = "";
+// --- ADD NOTE LOGIC ---
+addBtn.addEventListener('click', () => {
+  const text = noteInput.value.trim();
+  
+  if (text !== "") {
+    createNoteElement(text);
+    noteInput.value = ""; // Clear input
+    updateEmptyState();
+  }
+});
 
-  notes.forEach((note, index) => {
-    const li = document.createElement("li");
-
-    li.innerHTML = `
-      ${note}
-      <button data-index="${index}">❌</button>
-    `;
-
-    // Delete button
-    li.querySelector("button").addEventListener("click", () => {
-      deleteNote(index);
-    });
-
-    notesList.appendChild(li);
-  });
+function createNoteElement(text) {
+  const li = document.createElement('li');
+  li.innerHTML = `
+    <span class="note-text">${text}</span>
+    <button class="delete-note"><i class="fa-solid fa-trash-can"></i></button>
+  `;
+  notesList.appendChild(li);
 }
 
-// Delete note
-function deleteNote(index) {
-  chrome.storage.local.get(["notes"], (result) => {
-    const notes = result.notes || [];
-    notes.splice(index, 1);
+// --- DELETE & CLEAR LOGIC ---
+notesList.addEventListener('click', (e) => {
+  if (e.target.closest('.delete-note')) {
+    e.target.closest('li').remove();
+    updateEmptyState();
+  }
+});
 
-    chrome.storage.local.set({ notes }, () => {
-      displayNotes(notes);
-    });
-  });
+clearAllBtn.addEventListener('click', () => {
+  notesList.innerHTML = '';
+  updateEmptyState();
+});
+
+// --- EMPTY STATE LOGIC ---
+function updateEmptyState() {
+  if (notesList.children.length === 0) {
+    notesList.innerHTML = `<div id="emptyMsg" style="text-align:center; color:var(--text-muted); margin-top:20px; font-size:0.9rem;">No notes found</div>`;
+  } else {
+    const msg = document.getElementById('emptyMsg');
+    if (msg) msg.remove();
+  }
 }
 
-// Load notes from storage
-function loadNotes() {
-  chrome.storage.local.get(["notes"], (result) => {
-    const notes = result.notes || [];
-    displayNotes(notes);
-  });
+// --- THEME TOGGLE ---
+themeToggle.addEventListener('click', () => {
+  const isDark = body.classList.contains('dark-mode');
+  setTheme(isDark ? 'light-mode' : 'dark-mode');
+});
+
+function setTheme(theme) {
+  if (theme === 'light-mode') {
+    body.classList.replace('dark-mode', 'light-mode');
+    themeToggle.innerHTML = '<i class="fa-regular fa-sun"></i>';
+  } else {
+    body.classList.add('dark-mode');
+    body.classList.remove('light-mode');
+    themeToggle.innerHTML = '<i class="fa-regular fa-moon"></i>';
+  }
+  localStorage.setItem('notesTheme', theme);
 }
+
+// Close App
+document.getElementById('closeApp').addEventListener('click', () => window.close());
