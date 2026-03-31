@@ -19,7 +19,7 @@ body.dark-mode {
 body.light-mode {
   --bg-color: #f1f5f9; /* Soft grey bg */
   --container-bg: #ffffff;
-  --card-bg: #f8fafc; /* For textarea and note boxes */
+  --card-bg: #e2e8f0; /* For textarea and note boxes */
   --text-main: #1f2937;
   --text-muted: #6b7280;
   --text-note: #374151;
